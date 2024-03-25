@@ -127,10 +127,13 @@ namespace WPFSolderTrackerApp
         /// </returns>
         private bool simulateMovements()
         {
+            //C span
+
 
             foreach (MapPushpin tmpPushPin in SolderMapItems.Items)
             {
                 tmpPushPin.Location = new GeoPoint(rand.NextDouble() * 40, rand.NextDouble() * 40);
+                //Check my boundbox polygone && True False..
             }
             return true;
         }
