@@ -9,7 +9,7 @@
         Title="MainWindow" Height="576" Width="1394">
     <Grid Margin="0,0,10,-6">
         <Button Content="Load Soldiers" HorizontalAlignment="Left" Margin="30,32,0,0" VerticalAlignment="Top" Click="Button_Click"/>
-        <dxm:MapControl HorizontalAlignment="Left" Margin="30,106,0,0" VerticalAlignment="Top" Height="450" Width="881">
+        <dxm:MapControl x:Name="mpControl" HorizontalAlignment="Left" Margin="30,106,0,0" VerticalAlignment="Top" Height="450" Width="881">
             <dxm:ImageLayer ScrollViewer.CanContentScroll="True" >
                 <dxm:BingMapDataProvider Kind="Area" BingKey="AuAw7rUCanwu1KYkiRznpD--u-qOsU0sl_JohlnS2OrYJpJUyqo7hW1VbSdsuBlJ"/>
             </dxm:ImageLayer>
@@ -25,6 +25,7 @@
         <DataGrid x:Name="dgSoldiers"  Margin="916,125,10,10">
     
         </DataGrid>
+        <Button x:Name="btnSaveToDb" Content="Save Soldiers to DB" HorizontalAlignment="Left" Margin="194,59,0,0" VerticalAlignment="Top" Click="btnSaveToDb_Click"/>
 
     </Grid>
 </Window>

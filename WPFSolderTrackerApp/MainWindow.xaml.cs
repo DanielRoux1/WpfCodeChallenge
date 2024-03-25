@@ -1,15 +1,6 @@
 ﻿using System.Data.Entity;
 using System.IO;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DevExpress.Data.Linq.Helpers;
 using DevExpress.Xpf.Map;
 using Newtonsoft.Json;
@@ -29,9 +20,14 @@ namespace WPFSolderTrackerApp
         public MainWindow()
         {
             InitializeComponent();
+            _SoldierDb = new SoldierDb();
+            //Click handler nor present as per documentation
+           // mpControl.MapItemClick += onMapItemClick;
         }
 
-
+        //private void onMapItemClick(object sender, MapItemClickEventArgs e)
+        //{ 
+        //}
 
         /// <summary>Handles the Click event of the Button control.</summary>
         /// <param name="sender">The source of the event.</param>
@@ -78,7 +74,7 @@ namespace WPFSolderTrackerApp
         /// </returns>
         private bool loadSoldiersFromDb()
         {
-            _SoldierDb = new SoldierDb();
+           
             _SoldierDb.Soldiers.Load();
             _Soldiers = _SoldierDb.Soldiers.ToList<Soldier>();
             return true;
@@ -90,13 +86,23 @@ namespace WPFSolderTrackerApp
         /// </returns>
         private bool loadSoldierFromFile()
         {
-            using (StreamReader r = new StreamReader(Directory.GetCurrentDirectory() + "/Data/Soldiers.json"))
+            try
             {
-                string json = r.ReadToEnd();
-                _Soldiers = JsonConvert.DeserializeObject<List<Soldier>>(json);
+                using (StreamReader r = new StreamReader(Directory.GetCurrentDirectory() + "/Data/Soldiers.json"))
+                {
+                    string json = r.ReadToEnd();
+                    _Soldiers = JsonConvert.DeserializeObject<List<Soldier>>(json);
+                }
+                return true;
             }
+            catch (Exception ex) {
+                System.Windows.MessageBox.Show(messageBoxText: ex.Message.ToString());
+                return false;
+            }
+
             
-            return true;
+            
+            
         }
 
         /// <summary>Handles the 1 event of the Button_Click control.</summary>
@@ -127,6 +133,26 @@ namespace WPFSolderTrackerApp
                 tmpPushPin.Location = new GeoPoint(rand.NextDouble() * 40, rand.NextDouble() * 40);
             }
             return true;
+        }
+
+        /// <summary>Saves the Solders in Memory to the In Mem Database.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
+        private void btnSaveToDb_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                foreach (Soldier tmpSoldier in _Soldiers)
+                {
+                    _SoldierDb.Soldiers.Add(tmpSoldier);
+                }
+                _SoldierDb.SaveChanges();
+                System.Windows.MessageBox.Show("Saved Soldiers to Db");
+
+            }
+            catch (Exception ex){
+                System.Windows.MessageBox.Show("Could Not Save Soldiers to DB");
+            }
         }
     }
 }
